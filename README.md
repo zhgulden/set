@@ -71,10 +71,10 @@ which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType
     return balance(parent);
 }
 ```
-##### Examples:
+### Examples:
 **Example 1:**
 
-![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_INSERTION1-1.jpg)
+![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL-Insertion1-1.jpg)
 
 **Example 2:**
 
