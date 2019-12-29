@@ -42,10 +42,35 @@ The supported operations are:
 - int getBalance(Node<ValueType> *ptr)
 - void makeBalancePlus(Node<ValueType> **ptr)
 - void makeBalanceMinus(Node<ValueType> **ptr)
+- Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)
  
-## Insertion
+## Insertion  <a name="insert"></a>
+To make sure that the given tree remains AVL after every insertion, we must augment the standard BST insert operation to perform some re-balancing. Following are two basic operations that can be performed to re-balance a BST without violating the BST property (keys(left) < key(root) < keys(right)).
+1) Left Rotation
+2) Right Rotation, 
+which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)](#balance)
 
+```Node <ValueType> * Set <ValueType> :: insert(const ValueType & key, Node <ValueType> * parent) {
+    if (parent == NULL) {
+        Node <ValueType> * new_el = new Node <ValueType>;
+        new_el -> key = key;
+        new_el -> depth = 1;
+        return new_el;
+    } else {
+        if(parent -> key == key) {
+            return parent;
+        }
+        if (key < parent -> key) {
+            parent -> left = insert(key, parent -> left);
+        } else {
+            parent -> right = insert(key, parent -> right);
+        }
+    }
+    return balance(parent);
+}
+```
 
+## Balance  <a name="balance"></a>
 
 # Files
 
