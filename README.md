@@ -4,7 +4,7 @@
   - [Benefits of AVL-tree](#benefits)
 - [Main features](#features)
   - [Insertion](#insert)
-  - [Deletion](#erase)
+  - [Deletion](#delete)
 - [Support features](#support)
   - [Balancing tree after inserting a new element](#balance)
   
@@ -48,11 +48,14 @@ The supported operations are:
  
 ## Insertion  <a name="insert"></a>
 To make sure that the given tree remains AVL after every insertion, we must augment the standard BST insert operation to perform some re-balancing. Following are two basic operations that can be performed to re-balance a BST without violating the BST property **(keys(left) < key(root) < keys(right))**
+
 1) Left Rotation
 2) Right Rotation, 
+
 which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)](#balance)
 
-```Node <ValueType> * Set <ValueType> :: insert(const ValueType & key, Node <ValueType> * parent) {
+```
+Node <ValueType> * Set <ValueType> :: insert(const ValueType & key, Node <ValueType> * parent) {
     if (parent == NULL) {
         Node <ValueType> * new_el = new Node <ValueType>;
         new_el -> key = key;
@@ -79,6 +82,37 @@ which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType
 **Example 2:**
 
 ![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_Insertion_3-1.jpg)
+
+## Deletion  <a name="delete"></a>
+To make sure that the given tree remains AVL after every deletion, we must augment the standard BST delete operation to perform some re-balancing. Following are two basic operations that can be performed to re-balance a BST without violating the BST property **(keys(left) < key(root) < keys(right))**
+
+1) Left Rotation
+2) Right Rotation
+
+which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)](#balance)
+  
+```Node <ValueType> * Set <ValueType> :: erase (const ValueType & key, Node <ValueType> * ptr) {
+    if(ptr == NULL) {
+        return NULL;
+    }
+	if (key < ptr -> key) {
+		ptr -> left = erase(key, ptr -> left);
+    } else if (key > ptr -> key) {
+		ptr -> right = erase(key, ptr -> right);	
+    } else {
+        Node <ValueType> * l_tree = ptr -> left;
+		Node <ValueType> * r_tree = ptr -> right;
+		delete ptr;
+		if (r_tree == NULL) {
+		    return l_tree;
+        }
+		Node <ValueType> * min_node = find_min(r_tree);
+		min_node -> right = erase_min(r_tree);
+		min_node -> left = l_tree;
+		return balance(min_node);
+    }
+} 
+```
 
 ## Balancing tree after inserting a new element  <a name="balance"></a>
 
