@@ -2,7 +2,7 @@
 - [Overview](#overview)
   - [What AVL-tree is?](#intro)
   - [Benefits of AVL-tree](#benefits)
-- [Features](#features)
+- [Main features](#features)
   - [Insertion](#insert)
   - [Deletion](#erase)
 - [Support features](#support)
