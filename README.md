@@ -6,11 +6,10 @@
 
 Briefly, the supported operations are:
 
-    Insertion
-    Deletion
-    Search
-    In-order traversal (forwards and backwards)
-    Post-order traversal
+- Insertion
+- Deletion
+- Search
+- In-order traversal (forwards and backwards)
 
 # Files
 
