@@ -23,12 +23,19 @@ Most of the BST operations (e.g., search, max, min, insert, delete.. etc) take O
 
 # Features
 
-Briefly, the supported operations are:
+The supported operations are:
 
-- Insertion
-- Deletion
-- Search
-- In-order traversal (forwards and backwards)
+- void insert(const ValueType & key, Node<ValueType> **ptr, Node<ValueType> *parent = NULL)
+- void erase(const ValueType & key, Node<ValueType> **ptr>
+- void leftBig(Node<ValueType> **vertex)
+- void rightBig(Node<ValueType> **vertex)
+- void leftSmall(Node<ValueType> **vertex)
+- void rightSmall(Node<ValueType> **vertex)
+- int getDepth(Node<ValueType> *ptr)
+- void updatDepth(Node<ValueType> *ptr)
+- int getBalance(Node<ValueType> *ptr)
+- void makeBalancePlus(Node<ValueType> **ptr)
+- void makeBalanceMinus(Node<ValueType> **ptr)
 
 # Files
 
