@@ -91,7 +91,8 @@ To make sure that the given tree remains AVL after every deletion, we must augme
 
 which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)](#balance)
   
-```Node <ValueType> * Set <ValueType> :: erase (const ValueType & key, Node <ValueType> * ptr) {
+```
+Node <ValueType> * Set <ValueType> :: erase (const ValueType & key, Node <ValueType> * ptr) {
     if(ptr == NULL) {
         return NULL;
     }
@@ -112,7 +113,10 @@ which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType
 		return balance(min_node);
     }
 } 
-```
+````
+### Example:
+![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_TREE_DELETION.jpg)
+![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_deletion.jpg)
 
 ## Balancing tree after inserting a new element  <a name="balance"></a>
 
