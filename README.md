@@ -1,9 +1,12 @@
 # Table of contents
 - [Overview](#overview)
+  - [What AVL-tree is?](#intro)
   - [Benefits of AVL-tree](#benefits)
 - [Features](#features)
 
 # Overview <a name="overview"></a>
+
+# What AVL-tree is? <a name="intro"></a>
 AVL tree is a self-balancing Binary Search Tree (BST) where the difference between heights of left and right subtrees cannot be more than one for all nodes.
 
 **An Example Tree that is an AVL Tree:**
