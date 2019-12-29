@@ -5,6 +5,8 @@
 - [Features](#features)
   - [Insertion](#insert)
   - [Deletion](#erase)
+- [Support features](#support)
+  -[Balancing tree after inserting a new element](#balance)
   
 
 # Overview <a name="overview"></a>
