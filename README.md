@@ -58,4 +58,5 @@ If you want to enter your oun set of input numbers, run the program as follows:`
 In the test / directory there is a text file input.txt, which can be submitted as input:
 `./set < test/input.txt`
 
+# Debug mode 
 
