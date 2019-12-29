@@ -71,8 +71,13 @@ which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType
     return balance(parent);
 }
 ```
-**Examples:**
-![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_INSERTION2-1.jpg)
+##### Examples:
+**Example 1:**
+
+![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_INSERTION1-1.jpg)
+
+**Example 2:**
+
 ![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_Insertion_3-1.jpg)
 
 ## Balancing tree after inserting a new element  <a name="balance"></a>
