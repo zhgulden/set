@@ -6,7 +6,7 @@
   - [Insertion](#insert)
   - [Deletion](#erase)
 - [Support features](#support)
-  -[Balancing tree after inserting a new element](#balance)
+  - [Balancing tree after inserting a new element](#balance)
   
 
 # Overview <a name="overview"></a>
@@ -72,7 +72,7 @@ which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType
 }
 ```
 
-## Balance  <a name="balance"></a>
+## Balancing tree after inserting a new element  <a name="balance"></a>
 
 # Files
 
