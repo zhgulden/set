@@ -39,9 +39,13 @@ The supported operations are:
 - void makeBalanceMinus(Node<ValueType> **ptr)
 - Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)
  
-# Requirements
+# Requirements <a name="req"></a>
 `sudo apt-get update`
 
 `sudo apt-get install g++`
+
+# Compilation <a name="compilation"></a>
+`make set`
+
 
 
