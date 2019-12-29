@@ -47,5 +47,8 @@ The supported operations are:
 # Compilation <a name="compilation"></a>
 `make set`
 
+# How to run program?
+`./set`
+
 
 
