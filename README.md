@@ -28,19 +28,20 @@ Most of the BST operations (e.g., search, max, min, insert, delete.. etc) take O
 
 The supported operations are:
 
-- [void insert(const ValueType & key, Node<ValueType> **ptr, Node<ValueType> *parent = NULL)](#insert)
-- [void erase(const ValueType & key, Node<ValueType> **ptr>](#insert)
-- [Node <ValueType> * rotateleft(Node <ValueType> * ptr)](#rotleft)
-- [void rightBig(Node<ValueType> **vertex)](#rightBig)
-- [int getDepth(Node<ValueType> *ptr)](#getDepth)
+- void insert(const ValueType & key, Node<ValueType> **ptr, Node<ValueType> *parent = NULL)
+- void erase(const ValueType & key, Node<ValueType> **ptr>
+- Node <ValueType> * rotateleft(Node <ValueType> * ptr)
+- void rightBig(Node<ValueType> **vertex)
+- int getDepth(Node<ValueType> *ptr)
 - void updatDepth(Node<ValueType> *ptr)
 - int getBalance(Node<ValueType> *ptr)
 - void makeBalancePlus(Node<ValueType> **ptr)
 - void makeBalanceMinus(Node<ValueType> **ptr)
 - Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)
  
+# Requirements
+`sudo apt-get update`
 
-# Files
-
+`sudo apt-get install g++`
 
 
