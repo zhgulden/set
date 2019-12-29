@@ -50,5 +50,7 @@ The supported operations are:
 # How to run program?
 `./set`
 
+In the test / directory there is a text file input.txt, which can be submitted as input:
+`./set < test/input.txt`
 
 
