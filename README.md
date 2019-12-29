@@ -1,5 +1,5 @@
 # Table of contents
-1. [Introduction](#overview)
+1. [Overview](#overview)
 2. [Benefits of AVL-tree](#benefits)
 3. [Sub paragraph](#subparagraph1)
 
