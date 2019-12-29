@@ -43,8 +43,10 @@ The supported operations are:
 - Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)
  
 # Requirements <a name="req"></a>
-`sudo apt-get update`
+The program code was written in the C ++ programming language, therefore, to compile the code, you must install g++.
+GNU C++ Compiler ( g++ ) is a compiler in Linux which is used to compile C++ programs.
 
+`sudo apt-get update`
 `sudo apt-get install g++`
 
 # Compilation <a name="compile"></a>
