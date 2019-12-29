@@ -2,13 +2,7 @@
 - [Overview](#overview)
   - [What AVL-tree is?](#intro)
   - [Benefits of AVL-tree](#benefits)
-- [Main features](#features)
-  - [Insertion](#insert)
-  - [Deletion](#delete)
-  - [Big rotation to thr left](#leftBig)
-- [Support features](#support)
-  - [Balancing tree after inserting a new element](#balance)
-  
+- [Features](#features)
 
 # Overview <a name="overview"></a>
 
@@ -36,10 +30,8 @@ The supported operations are:
 
 - [void insert(const ValueType & key, Node<ValueType> **ptr, Node<ValueType> *parent = NULL)](#insert)
 - [void erase(const ValueType & key, Node<ValueType> **ptr>](#insert)
-- [void leftBig(Node<ValueType> **vertex)](#leftBig)
+- [Node <ValueType> * rotateleft(Node <ValueType> * ptr)](#rotleft)
 - [void rightBig(Node<ValueType> **vertex)](#rightBig)
-- [void leftSmall(Node<ValueType> **vertex)](#leftSmall)
-- [void rightSmall(Node<ValueType> **vertex)](#rightSmall)
 - [int getDepth(Node<ValueType> *ptr)](#getDepth)
 - void updatDepth(Node<ValueType> *ptr)
 - int getBalance(Node<ValueType> *ptr)
@@ -47,90 +39,6 @@ The supported operations are:
 - void makeBalanceMinus(Node<ValueType> **ptr)
 - Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)
  
-## Insertion  <a name="insert"></a>
-To make sure that the given tree remains AVL after every insertion, we must augment the standard BST insert operation to perform some re-balancing. Following are two basic operations that can be performed to re-balance a BST without violating the BST property **(keys(left) < key(root) < keys(right))**
-
-1) Left Rotation
-2) Right Rotation, 
-
-which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)](#balance)
-
-```
-Node <ValueType> * Set <ValueType> :: insert(const ValueType & key, Node <ValueType> * parent) {
-    if (parent == NULL) {
-        Node <ValueType> * new_el = new Node <ValueType>;
-        new_el -> key = key;
-        new_el -> depth = 1;
-        return new_el;
-    } else {
-        if(parent -> key == key) {
-            return parent;
-        }
-        if (key < parent -> key) {
-            parent -> left = insert(key, parent -> left);
-        } else {
-            parent -> right = insert(key, parent -> right);
-        }
-    }
-    return balance(parent);
-}
-```
-### Examples:
-**Example 1:**
-
-![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL-Insertion1-1.jpg)
-
-**Example 2:**
-
-![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_Insertion_3-1.jpg)
-
-## Deletion  <a name="delete"></a>
-To make sure that the given tree remains AVL after every deletion, we must augment the standard BST delete operation to perform some re-balancing. Following are two basic operations that can be performed to re-balance a BST without violating the BST property **(keys(left) < key(root) < keys(right))**
-
-1) Left Rotation
-2) Right Rotation
-
-which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)](#balance)
-  
-```
-Node <ValueType> * Set <ValueType> :: erase (const ValueType & key, Node <ValueType> * ptr) {
-    if(ptr == NULL) {
-        return NULL;
-    }
-	if (key < ptr -> key) {
-		ptr -> left = erase(key, ptr -> left);
-    } else if (key > ptr -> key) {
-		ptr -> right = erase(key, ptr -> right);	
-    } else {
-        Node <ValueType> * l_tree = ptr -> left;
-		Node <ValueType> * r_tree = ptr -> right;
-		delete ptr;
-		if (r_tree == NULL) {
-		    return l_tree;
-        }
-		Node <ValueType> * min_node = find_min(r_tree);
-		min_node -> right = erase_min(r_tree);
-		min_node -> left = l_tree;
-		return balance(min_node);
-    }
-} 
-````
-### Example:
-![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_TREE_DELETION.jpg)
-![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_deletion.jpg)
-
-## Big rotation to the left  <a name="leftBig"></a>
-To make a big turn to the left, the following is needed to be done: turn the right branch from the top to the right using [void rightSmall(Node<ValueType> **vertex)](#rightSmall), then turn left using the [void leftSmall(Node<ValueType> **vertex)](#leftSmall) functions
-
-```
-void Set<ValueType>::leftBig(Node<ValueType> **vertex) {
-	rightSmall(&((*vertex)->right));
-	leftSmall(vertex);
-}
-```
-## Small 
-
-## Balancing tree after inserting a new element  <a name="balance"></a>
 
 # Files
 
