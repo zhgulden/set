@@ -3,6 +3,9 @@
   - [What AVL-tree is?](#intro)
   - [Benefits of AVL-tree](#benefits)
 - [Features](#features)
+- [Requirements](#req)
+- [Compilation](#compile)
+- [How to run program?](#run)
 
 # Overview <a name="overview"></a>
 
@@ -44,10 +47,10 @@ The supported operations are:
 
 `sudo apt-get install g++`
 
-# Compilation <a name="compilation"></a>
+# Compilation <a name="compile"></a>
 `make set`
 
-# How to run program?
+# How to run program? <a name="run"></a>
 `./set`
 
 In the test / directory there is a text file input.txt, which can be submitted as input:
