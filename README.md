@@ -33,8 +33,8 @@ Most of the BST operations (e.g., search, max, min, insert, delete.. etc) take O
 
 The supported operations are:
 
-- void insert(const ValueType & key, Node<ValueType> **ptr, Node<ValueType> *parent = NULL)
-- void erase(const ValueType & key, Node<ValueType> **ptr>
+- [void insert(const ValueType & key, Node<ValueType> **ptr, Node<ValueType> *parent = NULL)](#insert)
+- [void erase(const ValueType & key, Node<ValueType> **ptr>](#insert)
 - void leftBig(Node<ValueType> **vertex)
 - void rightBig(Node<ValueType> **vertex)
 - void leftSmall(Node<ValueType> **vertex)
