@@ -45,7 +45,7 @@ The supported operations are:
 - Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)
  
 ## Insertion  <a name="insert"></a>
-To make sure that the given tree remains AVL after every insertion, we must augment the standard BST insert operation to perform some re-balancing. Following are two basic operations that can be performed to re-balance a BST without violating the BST property (keys(left) < key(root) < keys(right)).
+To make sure that the given tree remains AVL after every insertion, we must augment the standard BST insert operation to perform some re-balancing. Following are two basic operations that can be performed to re-balance a BST without violating the BST property **(keys(left) < key(root) < keys(right))**
 1) Left Rotation
 2) Right Rotation, 
 which realized in [Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr)](#balance)
