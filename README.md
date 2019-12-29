@@ -3,8 +3,8 @@
   - [What AVL-tree is?](#intro)
   - [Benefits of AVL-tree](#benefits)
 - [Features](#features)
-  - insertion
-  - deletion
+  - [Insertion](#insert)
+  - [Deletion](#erase)
   
 
 # Overview <a name="overview"></a>
@@ -42,6 +42,10 @@ The supported operations are:
 - int getBalance(Node<ValueType> *ptr)
 - void makeBalancePlus(Node<ValueType> **ptr)
 - void makeBalanceMinus(Node<ValueType> **ptr)
+ 
+## Insertion
+
+
 
 # Files
 
