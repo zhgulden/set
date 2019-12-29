@@ -3,6 +3,9 @@
   - [What AVL-tree is?](#intro)
   - [Benefits of AVL-tree](#benefits)
 - [Features](#features)
+  - insertion
+  - deletion
+  
 
 # Overview <a name="overview"></a>
 
