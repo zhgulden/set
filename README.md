@@ -51,7 +51,7 @@ The supported operations are:
 `make set`
 
 # How to run program? <a name="run"></a>
-`./set`
+If you want to enter your oun set of input numbers, run the program as follows:`./set`
 
 In the test / directory there is a text file input.txt, which can be submitted as input:
 `./set < test/input.txt`
