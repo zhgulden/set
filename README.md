@@ -5,6 +5,7 @@
 - [Main features](#features)
   - [Insertion](#insert)
   - [Deletion](#delete)
+  - [Big rotation to thr left](#leftBig)
 - [Support features](#support)
   - [Balancing tree after inserting a new element](#balance)
   
@@ -35,11 +36,11 @@ The supported operations are:
 
 - [void insert(const ValueType & key, Node<ValueType> **ptr, Node<ValueType> *parent = NULL)](#insert)
 - [void erase(const ValueType & key, Node<ValueType> **ptr>](#insert)
-- void leftBig(Node<ValueType> **vertex)
-- void rightBig(Node<ValueType> **vertex)
-- void leftSmall(Node<ValueType> **vertex)
-- void rightSmall(Node<ValueType> **vertex)
-- int getDepth(Node<ValueType> *ptr)
+- [void leftBig(Node<ValueType> **vertex)](#leftBig)
+- [void rightBig(Node<ValueType> **vertex)](#rightBig)
+- [void leftSmall(Node<ValueType> **vertex)](#leftSmall)
+- [void rightSmall(Node<ValueType> **vertex)](#rightSmall)
+- [int getDepth(Node<ValueType> *ptr)](#getDepth)
 - void updatDepth(Node<ValueType> *ptr)
 - int getBalance(Node<ValueType> *ptr)
 - void makeBalancePlus(Node<ValueType> **ptr)
@@ -117,6 +118,17 @@ Node <ValueType> * Set <ValueType> :: erase (const ValueType & key, Node <ValueT
 ### Example:
 ![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_TREE_DELETION.jpg)
 ![Image alt](https://github.com/zhgulden/set/raw/master/pictures/AVL_deletion.jpg)
+
+## Big rotation to the left  <a name="leftBig"></a>
+To make a big turn to the left, the following is needed to be done: turn the right branch from the top to the right using [void rightSmall(Node<ValueType> **vertex)](#rightSmall), then turn left using the [void leftSmall(Node<ValueType> **vertex)](#leftSmall) functions
+
+```
+void Set<ValueType>::leftBig(Node<ValueType> **vertex) {
+	rightSmall(&((*vertex)->right));
+	leftSmall(vertex);
+}
+```
+## Small 
 
 ## Balancing tree after inserting a new element  <a name="balance"></a>
 
