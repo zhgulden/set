@@ -55,8 +55,5 @@ GNU C++ Compiler ( g++ ) is a compiler in Linux which is used to compile C++ pro
 # How to run program? <a name="run"></a>
 If you want to enter your oun set of input numbers, run the program as follows:`./set`
 
-In the test / directory there is a text file input.txt, which can be submitted as input:
-`./set < test/input.txt`
-
 # Debug mode 
 
