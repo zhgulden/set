@@ -310,7 +310,7 @@ int main() {
     std::set<int>::iterator it;
     Set <int> new_set;
     int n, tmp;
-    n = 100000;
+    scanf("%d", &n);
     for(int i = 1; i <= n; i++) {
         std :: cin >> tmp;
         new_set.insert(tmp);
