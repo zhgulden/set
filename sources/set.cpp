@@ -1,329 +1,538 @@
-#include <iostream>
 #include <vector>
-#include <set>
+#include <iostream>
 #include <cassert>
+#include <set>
 
-#define DEBUG 0
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
+using std::set;
 
 template <class ValueType>
-
 struct Node {
-    ValueType key;
-    Node * left;
-    Node * right;
-    int depth;
+	ValueType key;
+	Node *left;
+	Node *right;
+	Node *parent;
+	int depth;
+	Node() : key(0), left(nullptr), right(nullptr), parent(nullptr), 
+	         depth(0) {};
 };
 
 template <class ValueType>
-
 class Set {
-    size_t size_;
-    Node <ValueType> *root;
-    Node <ValueType> * rotateleft(Node <ValueType> * ptr);
-    Node <ValueType> * rotateright(Node <ValueType> * ptr);
-    Node <ValueType> * find_min(Node <ValueType> * ptr);
-    Node <ValueType> * erase_min(Node <ValueType> * ptr);
-    int getDepth (Node <ValueType> * ptr);
-    void updateDepth (Node <ValueType> * ptr);
-    int getBalance (Node <ValueType> * ptr);
-    Node <ValueType> * balance(Node <ValueType> * ptr);
-    Node <ValueType> * insert (const ValueType & key, Node <ValueType> * parent);
-    Node <ValueType> * erase (const ValueType & key, Node <ValueType> * ptr);
-    void copy_set(Node <ValueType> * ptr);
-    void clear (Node <ValueType> * ptr);
-    void print(Node <ValueType> * ptr);
-    bool find(Node <ValueType> * ptr, const ValueType & key);
-    public:
-        Set() {
-            root = NULL;
-            size_ = 0;
-        }
-        Set (const Set <ValueType> & source);
-        size_t size () const;
-        bool empty () const;
-        bool find(const ValueType & key);
-        void insert (const ValueType & key);
-        void erase (const ValueType & key);
-        void print();
-        void clear();
-        void print_debug();
-        ~Set () {
-            clear();
-        }
+	size_t size_;
+	Node<ValueType> *root;
+	Node<ValueType> *begin(Node<ValueType> *ptr) const;
+	Node<ValueType> *rbegin(Node<ValueType> *ptr) const;
+	Node<ValueType> *next(Node<ValueType> *ptr) const;
+	Node<ValueType> *prev(Node<ValueType> *ptr) const;
+	void leftBig(Node<ValueType> **vertex);
+	void rightBig(Node<ValueType> **vertex);
+	void leftSmall(Node<ValueType> **vertex);
+	void rightSmall(Node<ValueType> **vertex);
+	
+	int getDepth(Node<ValueType> *ptr);
+	void updateDepth(Node<ValueType> * ptr);
+	
+	int getBalance(Node<ValueType> *ptr);
+	void makeBalancePlus(Node<ValueType> **ptr);
+	void makeBalanceMinus(Node<ValueType> **ptr);
+	Node<ValueType> *recursiveInsert(const ValueType & key, 
+	                                Node<ValueType> *cur_root, 
+	                                Node<ValueType> *parent = NULL);
+	void balance(Node<ValueType> **ptr);
+	bool erase(const ValueType & key, Node<ValueType> **ptr);
+	void clear(Node<ValueType> *ptr);
+	int getLeftDistance(Node<ValueType> *ptr) const;
+	int getRightDistance(Node<ValueType> *ptr) const;
+	void swap(Node<ValueType> *ptr_a, Node<ValueType> *ptr_b);
+	Node<ValueType> *copyNode(Node<ValueType> *parent, Node<ValueType> *ptr);
+	Node<ValueType> * find(ValueType & key, Node<ValueType> *ptr) const;
+public:
+	Set();
+	Set(const Set<ValueType> & source);
+	size_t size() const { return size_; };
+	bool empty() const { return root == nullptr; };
+	void insert(const ValueType & key);
+	void erase(const ValueType & key);
+	Node<ValueType> *begin() const;
+	Node<ValueType> *rbegin() const;
+	Node<ValueType> *find() const;
+	void clear();
+	void print() const;
+	void print_line() const;
+	Node<ValueType> * find(ValueType & key) const;
+	~Set();
 };
 
 template <class ValueType>
-
-bool Set <ValueType> :: find(Node <ValueType> * ptr, const ValueType & key) {
-    if(ptr == NULL) {
-        return 0;
-    }
-    if (ptr -> key == key) {
-        return 1;
-    } else if (ptr -> key > key) {
-        return find(ptr -> left, key);
-    }
-    return find(ptr -> right, key);
+Set<ValueType>::Set() {
+	size_ = 0;
+	root = nullptr;
 }
 
 template <class ValueType>
-
-bool Set <ValueType> :: find(const ValueType & key) {
-    return find(root, key);
+Set<ValueType>::Set(const Set<ValueType> & source) {
+	size_ = source.size();
+	root = copyNode(nullptr, source.root);
 }
 
 template <class ValueType>
-
-void Set <ValueType> :: print(Node <ValueType> * ptr) {
-    if(ptr != NULL) {
-        print(ptr -> left);
-        std :: cout << ptr -> key << ' ';
-        print(ptr -> right);
-    }
+Set<ValueType>::~Set() {
+	clear(root);
 }
 
 template <class ValueType>
-
-void Set <ValueType> :: print() {
-    print(root);
+Node<ValueType> * Set<ValueType>::copyNode(Node<ValueType> *parent, Node<ValueType> *ptr) {
+	if (ptr == nullptr)
+		return nullptr;
+	Node<ValueType> *node = new Node<ValueType>;
+	node->key = ptr->key;
+	node->left = copyNode(node, ptr->left);
+	node->right = copyNode(node, ptr->right);
+	node->parent = parent;
+	return node;
 }
 
 template <class ValueType>
-
-void Set <ValueType> :: copy_set (Node <ValueType> * ptr) {
-    if(ptr != NULL) {
-        insert(ptr -> key);
-        copy_set(ptr -> left);
-        copy_set(ptr -> right);
-    }
-}
-
-template <class ValueType>
-
-Set <ValueType> :: Set (const Set <ValueType> & source) {
-    root = NULL;
-    copy_set(source.root);
-}
-
-template <class ValueType>
-
-size_t Set <ValueType> :: size() const {
-    return size_;
-}
-
-template <class ValueType>
-
-void Set <ValueType> :: clear() {
-    clear(root); 
-}
-
-template <class ValueType>
-
-void Set <ValueType> :: clear (Node <ValueType> * ptr) {
-    if(ptr != NULL) {
-        Node <ValueType> * l_tree = ptr -> left;
-        Node <ValueType> * r_tree = ptr -> right;
-        delete ptr;
-        clear(l_tree);
-        clear(r_tree);
-    }
-    root = NULL;
-}
-
-template <class ValueType>
-
-void Set <ValueType> :: erase(const ValueType & key) {
-    root = erase(key, root);
-}
-
-template <class ValueType>
-
-Node <ValueType> * Set <ValueType> :: erase (const ValueType & key, Node <ValueType> * ptr) {
-    if(ptr == NULL) {
-        return NULL;
-    }
-	if (key < ptr -> key) {
-		ptr -> left = erase(key, ptr -> left);
-    } else if (key > ptr -> key) {
-		ptr -> right = erase(key, ptr -> right);	
-    } else {
-        Node <ValueType> * l_tree = ptr -> left;
-		Node <ValueType> * r_tree = ptr -> right;
-		delete ptr;
-		if (r_tree == NULL) {
-		    return l_tree;
-        }
-		Node <ValueType> * min_node = find_min(r_tree);
-		min_node -> right = erase_min(r_tree);
-		min_node -> left = l_tree;
-		return balance(min_node);
-    }
-}
-
-template <class ValueType>
-
-bool Set <ValueType> :: empty () const {
-    if (root == NULL) {
-        return 1;
-    }
-    return 0;
-}
-
-template <class ValueType>
-
-Node <ValueType> * Set <ValueType> :: erase_min(Node <ValueType> * ptr) { 
-    if (ptr -> left == NULL) {
-        return ptr -> right;
-    }
-    ptr -> left = erase_min(ptr -> left);
-    return balance(ptr);
-}
-
-template <class ValueType>
-
-Node <ValueType> * Set <ValueType> :: find_min(Node <ValueType> * ptr) {
-    if (ptr -> left != NULL) {
-        return find_min(ptr -> left);
-    }
-    return ptr;
+void Set<ValueType>::clear(Node<ValueType> *ptr) {
+	if (ptr == nullptr)
+		return;
+	if (ptr->left == nullptr && ptr->right == nullptr) {
+		free(ptr);
+		size_--;
+		return;
+	}
+	clear(ptr->left);
+	clear(ptr->right);
+	free(ptr);
+	size_--;
 }
 
 
 template <class ValueType>
-
-Node <ValueType> * Set <ValueType> :: rotateright(Node <ValueType> * ptr) {
-	Node <ValueType> * tmp = ptr->left;
-	ptr -> left = ptr->right;
-	tmp -> right = ptr;
-	updateDepth(ptr);
-	updateDepth(tmp);
-	return tmp;
+void Set<ValueType>::clear() {
+	clear(root);
+	root = nullptr;
 }
 
 template <class ValueType>
-
-Node <ValueType> * Set <ValueType> :: rotateleft(Node <ValueType> * ptr) {
-    Node <ValueType> * tmp = ptr -> right;
-	ptr -> right = tmp -> left;
-	tmp -> left = ptr;
-	updateDepth(ptr);
-	updateDepth(tmp);
-	return tmp;
-}
-
-template <class ValueType>
-
-int Set <ValueType> :: getBalance (Node <ValueType> * ptr) {
-    return getDepth(ptr -> right) - getDepth(ptr -> left);
-}
-
-template <class ValueType>
-
 int Set<ValueType>::getDepth(Node<ValueType> *ptr) {
-    if (ptr == nullptr)
-        return 0;
-    return ptr->depth;
+	if (ptr == nullptr)
+		return 0;
+	return ptr->depth;
 }
 
 template <class ValueType>
-
-void Set <ValueType> :: insert(const ValueType & key) {
-    ++size_;
-    root = insert(key, root);
+void Set<ValueType>::updateDepth(Node<ValueType> *ptr) {
+	if (ptr == nullptr)
+		return;
+	updateDepth(ptr->left);
+	updateDepth(ptr->right);
+	int depth_left = getDepth(ptr->left);
+	int depth_right = getDepth(ptr->right);
+	int max_depth = depth_left > depth_right ? depth_left : depth_right;
+	ptr->depth = 1 + max_depth;
 }
 
 template <class ValueType>
-
-void Set <ValueType> :: updateDepth (Node <ValueType> * ptr) {
-    if(getDepth(ptr -> left) > getDepth(ptr -> right)) {
-        ptr -> depth = getDepth(ptr -> left) + 1;
-    } else {
-        ptr -> depth = getDepth(ptr -> right) + 1;
-    }
+int Set<ValueType>::getBalance(Node<ValueType> *ptr) {
+	int depth_left = getDepth(ptr->left);
+	int depth_right = getDepth(ptr->right);
+	return depth_left - depth_right;
 }
 
 template <class ValueType>
-
-Node <ValueType> * Set <ValueType> :: insert(const ValueType & key, Node <ValueType> * parent) {
-    if (parent == NULL) {
-        Node <ValueType> * new_el = new Node <ValueType>;
-        new_el -> key = key;
-        new_el -> depth = 1;
-        return new_el;
-    } else {
-        if(parent -> key == key) {
-            return parent;
-        }
-        if (key < parent -> key) {
-            parent -> left = insert(key, parent -> left);
-        } else {
-            parent -> right = insert(key, parent -> right);
-        }
-    }
-    return balance(parent);
-}
-
-template <class ValueType>
-
-Node <ValueType> * Set <ValueType> :: balance(Node <ValueType> * ptr) {
-    updateDepth(ptr);
-    if(getBalance(ptr) == 2) {
-		if(getBalance(ptr -> right) < 0) {
-			ptr -> right = rotateright(ptr -> right);
-        }
-		return rotateleft(ptr);
+void Set<ValueType>::leftSmall(Node<ValueType> **vertex) {
+	if (DEBUG == 1) {
+		cout << "Left small: " << (*vertex)->key << " " << (*vertex)->right->key << endl;	
 	}
-	if(getBalance(ptr) == -2) {
-		if (getBalance(ptr -> left) > 0)
-			ptr -> left = rotateleft(ptr -> left);
-		return rotateright(ptr);
+	Node<ValueType> *node_a = *vertex;
+	Node<ValueType> *node_b = node_a->right;
+	
+	if (node_b->left)
+		node_b->left->parent = node_a;
+	node_b->parent = node_a->parent;
+	node_a->parent = node_b;
+	
+	node_a->right = node_b->left;
+	node_b->left = node_a;
+	
+	*vertex = node_b;
+}
+
+template <class ValueType>
+void Set<ValueType>::rightSmall(Node<ValueType> **vertex) {
+	if (DEBUG == 1) {
+		cout << "Right small: " << (*vertex)->key << endl;
 	}
+	Node<ValueType> *node_a = *vertex;
+	Node<ValueType> *node_b = node_a->left;
+	
+	if (node_b->right)
+		node_b->right->parent = node_a;
+	node_b->parent = node_a->parent;
+	node_a->parent = node_b;
+	
+	node_a->left = node_b->right;
+	node_b->right = node_a;
+
+	*vertex = node_b;
+}
+
+template <class ValueType>
+void Set<ValueType>::leftBig(Node<ValueType> **vertex) {
+	if (DEBUG == 1) {
+		cout << "Left big: " << (*vertex)->key << endl;
+	}
+	rightSmall(&((*vertex)->right));
+	if (DEBUG == 1) {
+		cout << "Root value: " << (*vertex)->right->key << endl; 
+	}
+	leftSmall(vertex);
+}
+
+template <class ValueType>
+void Set<ValueType>::rightBig(Node<ValueType> **vertex) {	
+	if (DEGUB == 1) {
+		cout << "Right big: " << (*vertex)->key << endl;
+	}
+	leftSmall(&((*vertex)->left));
+	rightSmall(vertex);
+}
+
+template <class ValueType>
+void Set<ValueType>::makeBalancePlus(Node<ValueType> **ptr) {
+	int right_balance = getBalance((*ptr)->right);
+	if (right_balance == 0 || right_balance == -1)
+		leftSmall(ptr);
+	if (right_balance == 1) {
+		int right_left_balance = getBalance((*ptr)->right->left);
+		if (abs(right_left_balance) <= 1)
+			leftBig(ptr);
+	}
+}
+
+template <class ValueType>
+void Set<ValueType>::makeBalanceMinus(Node<ValueType> **ptr) {
+	int left_balance = getBalance((*ptr)->left);
+	if (left_balance == 0 || left_balance == 1)
+		rightSmall(ptr);
+	if (left_balance == -1) {
+		int left_right_balance = getBalance((*ptr)->left->right);
+		if (abs(left_right_balance) <= 1)
+			rightBig(ptr);
+	}
+}
+
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::recursiveinsert(const ValueType & key, 
+	                            Node<ValueType> *cur_root, 
+	                            Node<ValueType> *parent) {
+	if (cur_root == nullptr) {
+		size_++;
+		Node<ValueType> *node = new Node<ValueType>;
+		node->key = key;
+		node->left = node->right = nullptr;
+		node->parent = parent;
+		if (DEBUG == 1) {
+			updateDepth(root);
+		}
+		return node;
+	}
+	if (key > cur_root->key)
+		cur_root->right = recursiveInsert(key, cur_root->right, cur_root);
+	else if (key < cur_root->key)
+		cur_root->left = recursiveInsert(key, cur_root->left, cur_root);
+	else
+		return cur_root;
+	updateDepth(cur_root);
+	int balance = getBalance(cur_root);
+	if (abs(balance) > 1) {
+		if (balance == -2)
+			makeBalancePlus(&cur_root);
+		else if (balance == 2)
+			makeBalanceMinus(&cur_root);
+		if (DEBUG == 1) {
+			updateDepth(cur_root);
+		}
+	}
+	return cur_root;
+}
+
+template <class ValueType>
+void Set<ValueType>::insert(const ValueType & key) {
+	root = recursiveInsert(key, root);
+}
+
+template <class ValueType>
+void Set<ValueType>::balance(Node<ValueType> **ptr) {
+	updateDepth(root);
+	int balance = getBalance(*ptr);
+	if (abs(balance) > 1) {
+		if (balance == -2)
+			makeBalancePlus(ptr);
+		else if (balance == 2)
+			makeBalanceMinus(ptr);
+		updateDepth(root);
+	}
+}
+
+
+template <class ValueType>
+int Set<ValueType>::getLeftDistance(Node<ValueType> *ptr) const {
+	if (ptr->left == nullptr)
+		return 0;
+	int dist = 1;
+	while (ptr->right) {
+		ptr = ptr->right;
+		dist++;
+	}
+	return dist;
+}
+
+template <class ValueType>
+int Set<ValueType>::getRightDistance(Node<ValueType> *ptr) const {
+	if (ptr->right == nullptr)
+		return 0;
+	int dist = 1;
+	while (ptr->left) {
+		ptr = ptr->left;
+		dist++;
+	}
+	return dist;
+}
+
+template <class ValueType>
+void Set<ValueType>::swap(Node<ValueType> *ptr_a, Node<ValueType> *ptr_b) {
+	ValueType key = ptr_a->key;
+	ptr_a->key = ptr_b->key;
+	ptr_b->key = key;
+}
+
+template <class ValueType>
+bool Set<ValueType>::erase(const ValueType & key, Node<ValueType> **ptr) {
+	if (ptr == nullptr || *ptr == nullptr)
+		return false;
+
+	if (key == (*ptr)->key) {
+		if ((*ptr)->left == nullptr && (*ptr)->right == nullptr) {
+			free(*ptr);
+			*ptr = nullptr;
+		} else {
+			Node<ValueType> *nearest_ptr;
+			int left_dist = getLeftDistance(*ptr);
+			int right_dist = getRightDistance(*ptr);
+			if ((left_dist <= right_dist && left_dist != 0) || right_dist == 0) {
+				nearest_ptr = prev(*ptr);
+				swap(*ptr, nearest_ptr);
+				erase(key, &((*ptr)->left));
+			} else {
+				nearest_ptr = next(*ptr);
+				swap(*ptr, nearest_ptr);
+				erase(key, &((*ptr)->right));
+			}
+		}
+		return true;
+	}
+	int has_erased = false;
+	if (key < (*ptr)->key)
+		has_erased = erase(key, &((*ptr)->left));
+	else if (key > (*ptr)->key)
+		has_erased = erase(key, &((*ptr)->right));
+	balance(ptr);
+	return has_erased;
+}
+
+template <class ValueType>
+void Set<ValueType>::erase(const ValueType & key) {
+	erase(key, &root);
+}
+
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::begin(Node<ValueType> *ptr) const {
+	if (ptr == nullptr)
+		return nullptr;
+	while (ptr->left != nullptr)
+		ptr = ptr->left;
 	return ptr;
 }
 
 template <class ValueType>
+Node<ValueType> * Set<ValueType>::rbegin(Node<ValueType> *ptr) const {
+	if (ptr == nullptr)
+		return nullptr;
+	while (ptr->right != nullptr)
+		ptr = ptr->right;
+	return ptr;
+}
 
-void Set <ValueType> :: print_debug() {
-    std :: vector <Node <ValueType>*> one, two;
-    int hmax = 6, width = 1 << hmax ;
-    one.push_back(root);
-    for (int level = 0; level < hmax; ++level) {
-        std :: string filler (width - 1 , ' ' );
-        for (auto elem : one) {
-            if (elem) {
-                std :: cout << filler << elem -> key << " (" << elem -> depth << ')' << filler;
-                two.push_back (elem -> left);
-                two.push_back (elem -> right);
-            } else {
-                std :: cout << filler << " --" << filler;
-                two.push_back(nullptr);
-                two.push_back(nullptr);
-            }
-        }
-        std :: cout << std :: endl;
-        one = two;
-        two.clear();
-        width /= 2;
-    }
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::begin() const {
+	return begin(root);
+}
+
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::rbegin() const {
+	return rbegin(root);
+}
+
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::next(Node<ValueType> *ptr) const {
+	if (ptr == nullptr)
+		return nullptr;
+	Node<ValueType> *cur_ptr = nullptr;
+	if (ptr->right != nullptr) {
+		cur_ptr = ptr->right;
+		while (cur_ptr->left)
+			cur_ptr = cur_ptr->left;
+		return cur_ptr;
+	}
+	if (ptr->parent && ptr->parent->right == ptr) {
+		while (ptr->parent && ptr->parent->right == ptr)
+			ptr = ptr->parent;
+		cur_ptr = ptr;
+		if (cur_ptr->parent == nullptr || cur_ptr->parent->left != cur_ptr)
+			return nullptr;
+		if (cur_ptr->parent && cur_ptr->parent->left == cur_ptr)
+			cur_ptr = cur_ptr->parent;
+		return cur_ptr;
+	}
+	return ptr->parent;
+}
+
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::prev(Node<ValueType> *ptr) const {
+	if (ptr == nullptr)
+		return nullptr;
+	if (DEBUG == 1) {
+		cout << "{" << ptr->key << "}" << endl;
+	}
+	if (ptr->parent == nullptr) {
+		ptr = ptr->left;
+		while (ptr->right)
+			ptr = ptr->right;
+		return ptr;
+	}
+	/* right child */
+	if (ptr == ptr->parent->right) {
+		if (ptr->left == nullptr)
+			return ptr->parent;
+		ptr = ptr->left;
+		while (ptr->right)
+			ptr = ptr->right;
+		return ptr;
+	}
+	/* left subtree */
+	if (ptr->left == nullptr) {
+		Node<ValueType> *cur_ptr = ptr->parent;
+		while (cur_ptr->parent && cur_ptr != cur_ptr->parent->right)
+			cur_ptr = cur_ptr->parent;
+		return cur_ptr->parent;
+	}
+	ptr = ptr->left;
+	while (ptr->right)
+		ptr = ptr->right;
+	return ptr;
+}
+
+template <class ValueType>
+void Set<ValueType>::print() const {
+	if (root == nullptr) {
+		cout << "Tree is empty." << endl;
+		return;
+	}
+	std::vector<Node<ValueType>*> one, two;
+	int hmax = 6, width = 1  << hmax;
+	one.push_back(root);
+	for (int level = 0; level < hmax; level++) {
+		string filler(width - 1, ' ');
+		for (auto elem : one) {
+			if (elem) {
+				if (DEBUG == 1) {
+					cout << "{" << ptr->key << "}" << endl;
+				}
+				if (DEBUG == 1) {
+					cout << filler << elem->key"[" << elem->depth << "]" << filler;
+				}
+				cout << filler << elem->key << "[";
+				if (elem->parent)
+					cout << elem->parent->key;
+				cout << "]" << filler;
+				if (DEBUG == 1) {
+					cout << filler << elem->key << filler;
+				}
+				two.push_back(elem->left);
+				two.push_back(elem->right);
+			} else {
+				cout << filler << "--" << filler;
+				two.push_back(nullptr);
+				two.push_back(nullptr);
+			}
+		}
+		cout << endl;
+		one = two;
+		two.clear();
+		width /= 2;
+	}
+}
+
+template <class ValueType>
+void Set<ValueType>::print_line() const {
+	Node<ValueType> *beg = begin(root);
+	Node<ValueType> *end = rbegin(root);
+	cout << beg->key << " " << end->key << " " << endl;
+	while (beg != nullptr) {
+		cout << beg->key << "(" << beg->depth << ")" << " ";
+		beg = next(beg);
+	}
+	cout << endl;
+	while (end != nullptr) {
+		cout << end->key << "(" << end->depth << ")" << " ";
+		end = prev(end);
+	}
+	cout << endl << "Size: " << size_ << endl;
+}
+
+
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::find(ValueType & key, Node<ValueType> *ptr) const {
+	if (ptr == nullptr)
+		return nullptr;
+	if (ptr->key == key)
+		return ptr;
+	if (ptr->key > key)
+		return find(key, ptr->left);
+	return find(key, ptr->right);
+}
+
+template <class ValueType>
+Node<ValueType> * Set<ValueType>::find(ValueType & key) const {
+	return find(key, root);
 }
 
 int main() {
-    std :: set <int> stlset;
-    std::set<int>::iterator it;
-    Set <int> new_set;
-    int n, tmp;
-    n = 100000;
-    for(int i = 1; i <= n; i++) {
-        std :: cin >> tmp;
-        new_set.insert(tmp);
-        stlset.insert(tmp);
-    }
-	for (int i = 1; i <= n; i++) {
-        std :: cin >> tmp;
-		bool a = new_set.find(tmp) != 0;
-		bool b = stlset.find(tmp) != stlset.end();
+	Set<int> tree;
+	set<int> stlset;
+	int n, m;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		int value;
+		cin >> value;
+		tree.insert(value);
+		stlset.insert(value);
+	}
+	cout << "Tree created." << endl;
+	tree.print();
+	cin >> m;
+	for (int i = 0; i < m; i++) {
+		int x;
+		cin >> x;
+		bool a = tree.find(x) != nullptr;
+		bool b = stlset.find(x) != stlset.end();
 		assert(a == b);
 	}
-	std :: cout << "tested" << std :: endl;
-    return 0;
+	return 0;
 }
