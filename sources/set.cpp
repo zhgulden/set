@@ -3,6 +3,8 @@
 #include <set>
 #include <cassert>
 
+#define DEBUG 0
+
 template <class ValueType>
 
 struct Node {
